@@ -1,0 +1,33 @@
+{
+  "name": "app-base",
+  "description": "Starter for creating a node.js application with a handful of common methods, like `set`, `get`, and `del`.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jonschlinkert/app-base",
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "repository": "jonschlinkert/app-base",
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/app-base/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "define-property": "^0.2.1",
+    "get-value": "^1.1.5",
+    "set-value": "^0.2.0",
+    "unset-value": "^0.1.0"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  },
+  "keywords": []
+}
