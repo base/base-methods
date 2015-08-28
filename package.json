@@ -1,7 +1,7 @@
 {
   "name": "app-base",
   "description": "Starter for creating a node.js application with a handful of common methods, like `set`, `get`, and `del`.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/jonschlinkert/app-base",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/app-base",
@@ -29,5 +29,16 @@
     "mocha": "*",
     "should": "*"
   },
-  "keywords": []
+  "keywords": [
+    "boilerplate",
+    "cache",
+    "del",
+    "get",
+    "inherit",
+    "methods",
+    "set",
+    "starter",
+    "unset",
+    "visit"
+  ]
 }
