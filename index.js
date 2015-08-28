@@ -164,16 +164,32 @@ Base.prototype = {
  *   Base.call(this, options);
  * }
  * Base.extend(MyApp);
+ *
+ *
+ * // Optionally pass another object to extend onto `MyApp`
+ * function MyApp(options) {
+ *   Base.call(this, options);
+ *   Foo.call(this, options);
+ * }
+ * Base.extend(MyApp, Foo.prototype);
  * ```
  *
  * @param {Function} `Ctor` The constructor to extend.
  * @api public
  */
 
-Base.extend = function (Ctor) {
+Base.extend = function (Ctor, proto) {
   util.inherits(Ctor, Base);
   for (var key in Base) {
     Ctor[key] = Base[key];
+  }
+
+  if (typeof proto === 'object') {
+    var obj = Object.create(proto);
+
+    for (var k in obj) {
+      Ctor.prototype[k] = obj[k];
+    }
   }
 };
 
