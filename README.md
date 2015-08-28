@@ -124,7 +124,7 @@ visit over the objects in an array.
 * `val` **{Object|Array}**
 * `returns` **{Object}**: Returns the instance for chaining.
 
-### [.extend](index.js#L173)
+### [.extend](index.js#L181)
 
 Static method for inheriting both the prototype and static methods of the `Base` class.
 
@@ -139,6 +139,13 @@ function MyApp(options) {
   Base.call(this, options);
 }
 Base.extend(MyApp);
+
+// Optionally pass another object to extend onto `MyApp`
+function MyApp(options) {
+  Base.call(this, options);
+  Foo.call(this, options);
+}
+Base.extend(MyApp, Foo.prototype);
 ```
 
 ## Related projects
