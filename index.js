@@ -4,6 +4,7 @@ var util = require('util');
 var set = require('set-value');
 var get = require('get-value');
 var del = require('unset-value');
+var visit = require('collection-visit');
 var Emitter = require('component-emitter');
 var define = require('define-property');
 
@@ -35,9 +36,14 @@ Base.prototype = Emitter({
   constructor: Base,
 
   /**
-   * Assign `value` to `key`.
+   * Assign `value` to `key`. Also emits `set` with
+   * the key and value.
    *
    * ```js
+   * app.on('set', function(key, val) {
+   *   // do something when `set` is emitted
+   * });
+   *
    * app.set(key, value);
    *
    * // also takes an object or array
@@ -54,12 +60,13 @@ Base.prototype = Emitter({
    * @api public
    */
 
-  set: function (key, value) {
+  set: function (key, val) {
     if (typeof key === 'object') {
-      this.visit('set', key, value);
+      this.visit('set', key, val);
     } else {
-      set(this, key, value);
+      set(this, key, val);
     }
+    this.emit('set', key, val);
     return this;
   },
 
@@ -85,7 +92,8 @@ Base.prototype = Emitter({
   },
 
   /**
-   * Delete `key` from the instance.
+   * Delete `key` from the instance. Also emits `del` with
+   * the key of the deleted item.
    *
    * ```js
    * app.del(); // delete all
@@ -106,6 +114,7 @@ Base.prototype = Emitter({
     } else {
       del(this, key);
     }
+    this.emit('del', key);
     return this;
   },
 
@@ -142,10 +151,7 @@ Base.prototype = Emitter({
    */
 
   visit: function (method, val) {
-    if (Array.isArray(val)) {
-      return val.forEach(this.visit.bind(this, method));
-    }
-    for (var key in val) this[method](key, val[key]);
+    visit(this, method, val);
     return this;
   }
 });

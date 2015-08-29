@@ -73,6 +73,17 @@ describe('Base', function () {
       assert(typeof foo.prototype.set === 'function');
     });
   });
+
+  describe('events', function () {
+    it('should emit and listen for events:', function (done) {
+      var base = new Base();
+      base.on('foo', function (val) {
+        assert(val === 'bar');
+        done();
+      })
+      base.emit('foo', 'bar');
+    });
+  });
 });
 
 /* deps: mocha */
