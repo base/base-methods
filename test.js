@@ -1,6 +1,5 @@
 'use strict';
 
-/* deps: mocha */
 var assert = require('assert');
 var should = require('should');
 var Base = require('./');
@@ -75,3 +74,5 @@ describe('Base', function () {
     });
   });
 });
+
+/* deps: mocha */

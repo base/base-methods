@@ -1,10 +1,3 @@
-/*!
- * app-base <https://github.com/jonschlinkert/app-base>
- *
- * Copyright (c) 2015, Jon Schlinkert.
- * Licensed under the MIT License.
- */
-
 'use strict';
 
 var util = require('util');
