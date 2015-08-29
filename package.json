@@ -20,6 +20,7 @@
     "test": "mocha"
   },
   "dependencies": {
+    "component-emitter": "^1.2.0",
     "define-property": "^0.2.3",
     "get-value": "^1.1.5",
     "set-value": "^0.2.0",

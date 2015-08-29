@@ -4,6 +4,7 @@ var util = require('util');
 var set = require('set-value');
 var get = require('get-value');
 var del = require('unset-value');
+var Emitter = require('component-emitter');
 var define = require('define-property');
 
 /**
@@ -24,12 +25,13 @@ function Base(options) {
   if (!(this instanceof Base)) {
     return new Base(options);
   }
+  Emitter.call(this);
   if (typeof options === 'object') {
     this.visit('set', options);
   }
 }
 
-Base.prototype = {
+Base.prototype = Emitter({
   constructor: Base,
 
   /**
@@ -146,7 +148,7 @@ Base.prototype = {
     for (var key in val) this[method](key, val[key]);
     return this;
   }
-};
+});
 
 /**
  * Static method for inheriting both the prototype and
