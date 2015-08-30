@@ -27,6 +27,7 @@ function Base(options) {
     return new Base(options);
   }
   Emitter.call(this);
+  this.define('_callbacks', this._callbacks);
   if (typeof options === 'object') {
     this.visit('set', options);
   }
