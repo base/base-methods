@@ -1,7 +1,7 @@
 {
   "name": "base-methods",
   "description": "Starter for creating a node.js application with a handful of common methods, like `set`, `get`, and `del`.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "https://github.com/jonschlinkert/base-methods",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/base-methods",
@@ -24,6 +24,7 @@
     "component-emitter": "^1.2.0",
     "define-property": "^0.2.3",
     "get-value": "^1.1.5",
+    "lazy-cache": "^0.2.3",
     "set-value": "^0.2.0",
     "unset-value": "^0.1.0"
   },
