@@ -1,12 +1,8 @@
 'use strict';
 
 var util = require('util');
-var set = require('set-value');
-var get = require('get-value');
-var del = require('unset-value');
-var visit = require('collection-visit');
 var Emitter = require('component-emitter');
-var define = require('define-property');
+var utils = require('./utils');
 
 /**
  * Create an instance of `Base` with optional `options`.
@@ -63,11 +59,11 @@ Base.prototype = Emitter({
 
   set: function (key, val) {
     if (typeof key === 'object') {
-      this.visit('set', key, val);
+      this.visit('set', key);
     } else {
-      set(this, key, val);
+      utils.set(this, key, val);
+      this.emit('set', key, val);
     }
-    this.emit('set', key, val);
     return this;
   },
 
@@ -89,7 +85,7 @@ Base.prototype = Emitter({
    */
 
   get: function (key) {
-    return get(this, key);
+    return utils.get(this, key);
   },
 
   /**
@@ -113,9 +109,9 @@ Base.prototype = Emitter({
     if (typeof key === 'object') {
       this.visit('del', key);
     } else {
-      del(this, key);
+      utils.del(this, key);
+      this.emit('del', key);
     }
-    this.emit('del', key);
     return this;
   },
 
@@ -136,7 +132,7 @@ Base.prototype = Emitter({
    */
 
   define: function (key, value) {
-    define(this, key, value);
+    utils.define(this, key, value);
     return this;
   },
 
@@ -152,7 +148,7 @@ Base.prototype = Emitter({
    */
 
   visit: function (method, val) {
-    visit(this, method, val);
+    utils.visit(this, method, val);
     return this;
   }
 });
