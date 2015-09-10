@@ -177,21 +177,7 @@ Base.prototype = Emitter({
  * @api public
  */
 
-Base.extend = function (Ctor, proto) {
-  util.inherits(Ctor, Base);
-
-  for (var key in Base) {
-    Ctor[key] = Base[key];
-  }
-
-  if (typeof proto === 'object') {
-    var obj = Object.create(proto);
-
-    for (var k in obj) {
-      Ctor.prototype[k] = obj[k];
-    }
-  }
-};
+Base.extend = utils.extend(Base);
 
 /**
  * Similar to `util.inherit`, but copies all properties

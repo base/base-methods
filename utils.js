@@ -72,4 +72,23 @@ utils.inherit = function inherit(receiver, provider, omit) {
   }
 };
 
+utils.extend = function extend (Parent) {
+  return function (Ctor, proto) {
+    util.inherits(Ctor, Parent);
+
+    for (var key in Parent) {
+      Ctor[key] = Parent[key];
+    }
+
+    if (typeof proto === 'object') {
+      var obj = Object.create(proto);
+
+      for (var k in obj) {
+        Ctor.prototype[k] = obj[k];
+      }
+    }
+    Ctor.extend = utils.extend(Ctor);
+  };
+};
+
 module.exports = lazy;
