@@ -37,6 +37,18 @@ describe('Base', function () {
   });
 
   describe('prototype methods', function () {
+    it('should extend the prototype of the given Ctor:', function () {
+      function Ctor() {
+        Base.call(this);
+      }
+      Base.extend(Ctor);
+      assert(typeof Ctor.extend === 'function');
+
+      var ctor = new Ctor();
+      assert(typeof ctor.set === 'function');
+      assert(typeof ctor.get === 'function');
+    });
+
     it('should expose `prototype.set` method', function () {
       assert(typeof Base.prototype.set === 'function');
     });

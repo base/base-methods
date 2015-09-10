@@ -173,11 +173,13 @@ Base.prototype = Emitter({
  * ```
  *
  * @param {Function} `Ctor` The constructor to extend.
+ * @param {Object} `proto` Optionally pass an object of methods to extend the prototype.
  * @api public
  */
 
 Base.extend = function (Ctor, proto) {
   util.inherits(Ctor, Base);
+
   for (var key in Base) {
     Ctor[key] = Base[key];
   }
@@ -190,6 +192,21 @@ Base.extend = function (Ctor, proto) {
     }
   }
 };
+
+/**
+ * Similar to `util.inherit`, but copies all properties
+ * and descriptors from `Provider` to `Receiver`
+ *
+ * ```js
+ * Base.inherit(MyClass, OtherClass);
+ * ```
+ *
+ * @param {Function} `Receiver` Constructor to extend
+ * @param {Function} `Provider`
+ * @api public
+ */
+
+Base.inherit = utils.inherit;
 
 /**
  * Expose `Base`
