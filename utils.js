@@ -1,4 +1,5 @@
 
+var util = require('util');
 var lazy = require('lazy-cache')(require);
 lazy('set-value', 'set');
 lazy('get-value', 'get');
