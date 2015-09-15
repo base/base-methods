@@ -2,6 +2,7 @@
 
 var util = require('util');
 var Emitter = require('component-emitter');
+var cu = require('class-utils');
 var utils = require('./utils');
 
 /**
@@ -106,7 +107,7 @@ Base.prototype = Emitter({
    */
 
   del: function (key) {
-    if (typeof key === 'object') {
+    if (Array.isArray(key)) {
       this.visit('del', key);
     } else {
       utils.del(this, key);
@@ -155,44 +156,23 @@ Base.prototype = Emitter({
 
 /**
  * Static method for inheriting both the prototype and
- * static methods of the `Base` class.
+ * static methods of the `Base` class. See [class-utils][]
+ * for more details.
  *
- * ```js
- * function MyApp(options) {
- *   Base.call(this, options);
- * }
- * Base.extend(MyApp);
- *
- *
- * // Optionally pass another object to extend onto `MyApp`
- * function MyApp(options) {
- *   Base.call(this, options);
- *   Foo.call(this, options);
- * }
- * Base.extend(MyApp, Foo.prototype);
- * ```
- *
- * @param {Function} `Ctor` The constructor to extend.
- * @param {Object} `proto` Optionally pass an object of methods to extend the prototype.
  * @api public
  */
 
-Base.extend = utils.extend(Base);
+Base.extend = cu.extend(Base);
 
 /**
- * Similar to `util.inherit`, but copies all properties
- * and descriptors from `Provider` to `Receiver`
+ * Similar to `util.inherit`, but copies all static properties,
+ * prototype properties, and descriptors from `Provider` to `Receiver`.
+ * [class-utils][] for more details.
  *
- * ```js
- * Base.inherit(MyClass, OtherClass);
- * ```
- *
- * @param {Function} `Receiver` Constructor to extend
- * @param {Function} `Provider`
  * @api public
  */
 
-Base.inherit = utils.inherit;
+Base.inherit = cu.inherit;
 
 /**
  * Expose `Base`
