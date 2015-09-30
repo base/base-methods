@@ -117,19 +117,19 @@ describe('prototype methods', function () {
   });
 
   describe('set', function () {
-    it('should set a key-value pair:', function () {
+    it('should set a key-value pair on the instance:', function () {
       base.set('foo', 'bar');
       assert(base.foo === 'bar');
     });
 
-    it('should set an object:', function () {
+    it('should set an object on the instance:', function () {
       base.set({a: 'b'});
       assert(base.a === 'b');
     });
   });
 
   describe('get', function () {
-    it('should get a property:', function () {
+    it('should get a property from the instance:', function () {
       base.set({a: 'b'});
       assert(base.get('a') === 'b');
     });
@@ -164,6 +164,86 @@ describe('prototype methods', function () {
       base.del(['a', 'b']);
       assert(typeof base.a === 'undefined');
       assert(typeof base.b === 'undefined');
+    });
+  });
+});
+
+
+describe('namespaces', function () {
+  describe('constructor', function () {
+    it('should expose `create`', function () {
+      assert(typeof Base.create === 'function');
+    });
+
+    it('should extend the given Ctor with static methods:', function () {
+      var Foo = Base.create('cache');
+      function Ctor() {
+        Foo.call(this);
+      }
+      Foo.extend(Ctor);
+      assert(typeof Ctor.extend === 'function');
+
+      function foo() {}
+      Ctor.extend(foo);
+      assert(typeof foo.extend === 'function');
+    });
+  });
+
+  describe('prototype methods', function () {
+    beforeEach(function () {
+      var Custom = Base.create('cache');
+      base = new Custom();
+    });
+
+    describe('set', function () {
+      it('should set a key-value pair on the instance:', function () {
+        base.set('foo', 'bar');
+        assert(base.cache.foo === 'bar');
+      });
+
+      it('should set an object on the instance:', function () {
+        base.set({a: 'b'});
+        assert(base.cache.a === 'b');
+      });
+    });
+
+    describe('get', function () {
+      it('should get a property from the instance:', function () {
+        base.set({a: 'b'});
+        assert(base.get('a') === 'b');
+      });
+    });
+
+    describe('get', function () {
+      it('should visit an object with the given method:', function () {
+        base.visit('set', {a: 'b', c: 'd'});
+        assert(base.get('a') === 'b');
+        assert(base.get('c') === 'd');
+      });
+      it('should visit an array with the given method:', function () {
+        base.visit('set', [{a: 'b', c: 'd'}]);
+        assert(base.get('a') === 'b');
+        assert(base.get('c') === 'd');
+      });
+    });
+
+    describe('del', function () {
+      it('should remove a property:', function () {
+        base.set({a: 'b'});
+        assert(base.cache.a === 'b');
+        base.del('a');
+        assert(typeof base.cache.a === 'undefined');
+      });
+
+      it('should remove an array of properties:', function () {
+        base.set({a: 'a'});
+        base.set({b: 'b'});
+        assert(base.cache.a === 'a');
+        assert(base.cache.b === 'b');
+        base.del(['a', 'b']);
+        assert(typeof base.cache.a === 'undefined');
+        assert(typeof base.cache.b === 'undefined');
+      });
     });
   });
 });
