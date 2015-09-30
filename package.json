@@ -11,6 +11,7 @@
   "license": "MIT",
   "files": [
     "index.js",
+    "utils-browser.js",
     "utils.js"
   ],
   "main": "index.js",
@@ -21,14 +22,14 @@
     "test": "mocha"
   },
   "browser": {
-    "./utils.js": "./utils-browser.js"
+    "utils.js": "utils-browser.js"
   },
   "dependencies": {
-    "class-utils": "^0.1.1",
+    "class-utils": "^0.1.2",
     "collection-visit": "^0.2.0",
     "component-emitter": "^1.2.0",
-    "define-property": "^0.2.3",
-    "get-value": "^1.1.5",
+    "define-property": "^0.2.5",
+    "get-value": "^1.2.1",
     "lazy-cache": "^0.2.3",
     "set-value": "^0.2.0",
     "unset-value": "^0.1.0"
