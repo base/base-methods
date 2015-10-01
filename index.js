@@ -31,7 +31,6 @@ function base(name) {
     }
   }
 
-
   Base.prototype = Emitter({
     constructor: Base,
 
@@ -60,7 +59,7 @@ function base(name) {
      * @api public
      */
 
-    set: function (key, val) {
+    set: function(key, val) {
       if (typeof key === 'object') {
         this.visit('set', key);
       } else {
@@ -91,7 +90,7 @@ function base(name) {
      * @api public
      */
 
-    get: function (key) {
+    get: function(key) {
       if (name) {
         return utils.get(this[name], key);
       }
@@ -115,7 +114,7 @@ function base(name) {
      * @api public
      */
 
-    del: function (key) {
+    del: function(key) {
       if (Array.isArray(key)) {
         this.visit('del', key);
       } else {
@@ -145,12 +144,8 @@ function base(name) {
      * @api public
      */
 
-    define: function (key, value) {
-      if (name) {
-        utils.define(this[name], key, value);
-      } else {
-        utils.define(this, key, value);
-      }
+    define: function(key, value) {
+      utils.define(this, key, value);
       return this;
     },
 
@@ -165,7 +160,7 @@ function base(name) {
      * @api public
      */
 
-    visit: function (method, val) {
+    visit: function(method, val) {
       utils.visit(this, method, val);
       return this;
     }
@@ -203,4 +198,4 @@ module.exports = base();
  * Allow users to define a namespace
  */
 
-module.exports.create = base;
+module.exports.namespace = base;

@@ -6,35 +6,42 @@ var assert = require('assert');
 var Base = require('./');
 var base;
 
-describe('constructor', function () {
-  it('should return an instance of Base:', function () {
+describe('constructor', function() {
+  it('should return an instance of Base:', function() {
     var base = new Base();
     assert(base instanceof Base);
   });
 
-  it('should return an instance of Base without new:', function () {
+  it('should return an instance of Base without new:', function() {
     var base = Base();
     assert(base instanceof Base);
   });
 
-  it('should extend the instance when an object is passed:', function () {
-    var base = new Base({foo: 'bar'});
+  it('should extend the instance when an object is passed:', function() {
+    var base = new Base({
+      foo: 'bar'
+    });
     assert(base.foo === 'bar');
   });
 
-  it('should extend the instance when an array of objects is passed:', function () {
-    var base = new Base([{foo: 'bar'}, {baz: 'qux'}]);
-    assert(base.foo === 'bar');
-    assert(base.baz === 'qux');
-  });
+  it('should extend the instance when an array of objects is passed:',
+    function() {
+      var base = new Base([{
+        foo: 'bar'
+      }, {
+        baz: 'qux'
+      }]);
+      assert(base.foo === 'bar');
+      assert(base.baz === 'qux');
+    });
 });
 
-describe('static methods', function () {
-  it('should expose `.extend` method', function () {
+describe('static methods', function() {
+  it('should expose `.extend` method', function() {
     assert(typeof Base.extend === 'function');
   });
 
-  it('should extend the given Ctor with static methods:', function () {
+  it('should extend the given Ctor with static methods:', function() {
     function Ctor() {
       Base.call(this);
     }
@@ -47,8 +54,8 @@ describe('static methods', function () {
   });
 });
 
-describe('extend prototype methods', function () {
-  it('should extend the prototype of the given Ctor:', function () {
+describe('extend prototype methods', function() {
+  it('should extend the prototype of the given Ctor:', function() {
     function Ctor() {
       Base.call(this);
     }
@@ -60,27 +67,27 @@ describe('extend prototype methods', function () {
     assert(typeof ctor.get === 'function');
   });
 
-  it('should expose `prototype.set` method', function () {
+  it('should expose `prototype.set` method', function() {
     assert(typeof Base.prototype.set === 'function');
   });
 
-  it('should expose `prototype.get` method', function () {
+  it('should expose `prototype.get` method', function() {
     assert(typeof Base.prototype.get === 'function');
   });
 
-  it('should expose `prototype.del` method', function () {
+  it('should expose `prototype.del` method', function() {
     assert(typeof Base.prototype.del === 'function');
   });
 
-  it('should expose `prototype.visit` method', function () {
+  it('should expose `prototype.visit` method', function() {
     assert(typeof Base.prototype.visit === 'function');
   });
 
-  it('should expose `prototype.define` method', function () {
+  it('should expose `prototype.define` method', function() {
     assert(typeof Base.prototype.define === 'function');
   });
 
-  it('should add prototype methods to the given Ctor:', function () {
+  it('should add prototype methods to the given Ctor:', function() {
     function Ctor() {
       Base.call(this);
     }
@@ -97,13 +104,13 @@ describe('extend prototype methods', function () {
   });
 });
 
-describe('static methods', function () {
-  beforeEach(function () {
+describe('static methods', function() {
+  beforeEach(function() {
     base = new Base();
   });
 
-  describe('extend', function () {
-    it('should set the extend method on the given object:', function () {
+  describe('extend', function() {
+    it('should set the extend method on the given object:', function() {
       function Ctor() {}
       Base.extend(Ctor);
       assert(typeof Ctor.extend === 'function');
@@ -111,54 +118,70 @@ describe('static methods', function () {
   });
 });
 
-describe('prototype methods', function () {
-  beforeEach(function () {
+describe('prototype methods', function() {
+  beforeEach(function() {
     base = new Base();
   });
 
-  describe('set', function () {
-    it('should set a key-value pair on the instance:', function () {
+  describe('set', function() {
+    it('should set a key-value pair on the instance:', function() {
       base.set('foo', 'bar');
       assert(base.foo === 'bar');
     });
 
-    it('should set an object on the instance:', function () {
-      base.set({a: 'b'});
+    it('should set an object on the instance:', function() {
+      base.set({
+        a: 'b'
+      });
       assert(base.a === 'b');
     });
   });
 
-  describe('get', function () {
-    it('should get a property from the instance:', function () {
-      base.set({a: 'b'});
+  describe('get', function() {
+    it('should get a property from the instance:', function() {
+      base.set({
+        a: 'b'
+      });
       assert(base.get('a') === 'b');
     });
   });
 
-  describe('get', function () {
-    it('should visit an object with the given method:', function () {
-      base.visit('set', {a: 'b', c: 'd'});
+  describe('get', function() {
+    it('should visit an object with the given method:', function() {
+      base.visit('set', {
+        a: 'b',
+        c: 'd'
+      });
       assert(base.get('a') === 'b');
       assert(base.get('c') === 'd');
     });
-    it('should visit an array with the given method:', function () {
-      base.visit('set', [{a: 'b', c: 'd'}]);
+    it('should visit an array with the given method:', function() {
+      base.visit('set', [{
+        a: 'b',
+        c: 'd'
+      }]);
       assert(base.get('a') === 'b');
       assert(base.get('c') === 'd');
     });
   });
 
-  describe('del', function () {
-    it('should remove a property:', function () {
-      base.set({a: 'b'});
+  describe('del', function() {
+    it('should remove a property:', function() {
+      base.set({
+        a: 'b'
+      });
       assert(base.a === 'b');
       base.del('a');
       assert(typeof base.a === 'undefined');
     });
 
-    it('should remove an array of properties:', function () {
-      base.set({a: 'a'});
-      base.set({b: 'b'});
+    it('should remove an array of properties:', function() {
+      base.set({
+        a: 'a'
+      });
+      base.set({
+        b: 'b'
+      });
       assert(base.a === 'a');
       assert(base.b === 'b');
       base.del(['a', 'b']);
@@ -169,14 +192,15 @@ describe('prototype methods', function () {
 });
 
 
-describe('namespaces', function () {
-  describe('constructor', function () {
-    it('should expose `create`', function () {
-      assert(typeof Base.create === 'function');
+describe('namespaces', function() {
+  describe('constructor', function() {
+    it('should expose `namespace`', function() {
+      assert(typeof Base.namespace === 'function');
     });
 
-    it('should extend the given Ctor with static methods:', function () {
-      var Foo = Base.create('cache');
+    it('should extend the given Ctor with static methods:', function() {
+      var Foo = Base.namespace('cache');
+
       function Ctor() {
         Foo.call(this);
       }
@@ -189,55 +213,71 @@ describe('namespaces', function () {
     });
   });
 
-  describe('prototype methods', function () {
-    beforeEach(function () {
-      var Custom = Base.create('cache');
+  describe('prototype methods', function() {
+    beforeEach(function() {
+      var Custom = Base.namespace('cache');
       base = new Custom();
     });
 
-    describe('set', function () {
-      it('should set a key-value pair on the instance:', function () {
+    describe('set', function() {
+      it('should set a key-value pair on the instance:', function() {
         base.set('foo', 'bar');
         assert(base.cache.foo === 'bar');
       });
 
-      it('should set an object on the instance:', function () {
-        base.set({a: 'b'});
+      it('should set an object on the instance:', function() {
+        base.set({
+          a: 'b'
+        });
         assert(base.cache.a === 'b');
       });
     });
 
-    describe('get', function () {
-      it('should get a property from the instance:', function () {
-        base.set({a: 'b'});
+    describe('get', function() {
+      it('should get a property from the instance:', function() {
+        base.set({
+          a: 'b'
+        });
         assert(base.get('a') === 'b');
       });
     });
 
-    describe('get', function () {
-      it('should visit an object with the given method:', function () {
-        base.visit('set', {a: 'b', c: 'd'});
+    describe('get', function() {
+      it('should visit an object with the given method:', function() {
+        base.visit('set', {
+          a: 'b',
+          c: 'd'
+        });
         assert(base.get('a') === 'b');
         assert(base.get('c') === 'd');
       });
-      it('should visit an array with the given method:', function () {
-        base.visit('set', [{a: 'b', c: 'd'}]);
+      it('should visit an array with the given method:', function() {
+        base.visit('set', [{
+          a: 'b',
+          c: 'd'
+        }]);
         assert(base.get('a') === 'b');
         assert(base.get('c') === 'd');
       });
     });
 
-    describe('del', function () {
-      it('should remove a property:', function () {
-        base.set({a: 'b'});
+    describe('del', function() {
+      it('should remove a property:', function() {
+        base.set({
+          a: 'b'
+        });
         assert(base.cache.a === 'b');
         base.del('a');
         assert(typeof base.cache.a === 'undefined');
       });
 
-      it('should remove an array of properties:', function () {
-        base.set({a: 'a'});
-        base.set({b: 'b'});
+      it('should remove an array of properties:', function() {
+        base.set({
+          a: 'a'
+        });
+        base.set({
+          b: 'b'
+        });
         assert(base.cache.a === 'a');
         assert(base.cache.b === 'b');
         base.del(['a', 'b']);
@@ -248,10 +288,10 @@ describe('namespaces', function () {
   });
 });
 
-describe('events', function () {
-  it('should emit and listen for events:', function (done) {
+describe('events', function() {
+  it('should emit and listen for events:', function(done) {
     var base = new Base();
-    base.on('foo', function (val) {
+    base.on('foo', function(val) {
       assert(val === 'bar');
       done();
     })
