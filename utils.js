@@ -1,10 +1,23 @@
 'use strict';
 
+/**
+ * Lazily required module dependencies
+ */
+
 var lazy = require('lazy-cache')(require);
-lazy('set-value', 'set');
-lazy('get-value', 'get');
-lazy('unset-value', 'del');
-lazy('collection-visit', 'visit');
-lazy('define-property', 'define');
+var fn = require;
+
+require = lazy;
+require('set-value', 'set');
+require('get-value', 'get');
+require('unset-value', 'del');
+require('collection-visit', 'visit');
+require('define-property', 'define');
+require('component-emitter', 'Emitter');
+require('class-utils', 'cu');
+
+/**
+ * Expose `lazy` modules
+ */
 
 module.exports = lazy;

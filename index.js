@@ -1,8 +1,6 @@
 'use strict';
 
 function base(name) {
-  var Emitter = require('component-emitter');
-  var cu = require('class-utils');
   var utils = require('./utils');
 
   /**
@@ -23,7 +21,7 @@ function base(name) {
     if (!(this instanceof Base)) {
       return new Base(options);
     }
-    Emitter.call(this);
+    utils.Emitter.call(this);
     if (name) this[name] = {};
     this.define('_callbacks', this._callbacks);
     if (typeof options === 'object') {
@@ -31,7 +29,7 @@ function base(name) {
     }
   }
 
-  Base.prototype = Emitter({
+  Base.prototype = utils.Emitter({
     constructor: Base,
 
     /**
@@ -174,7 +172,7 @@ function base(name) {
    * @api public
    */
 
-  Base.extend = cu.extend(Base);
+  Base.extend = utils.cu.extend(Base);
 
   /**
    * Similar to `util.inherit`, but copies all static properties,
@@ -184,7 +182,7 @@ function base(name) {
    * @api public
    */
 
-  Base.inherit = cu.inherit;
+  Base.inherit = utils.cu.inherit;
   return Base;
 }
 
