@@ -146,7 +146,7 @@ app.del('foo');
 app.del(['foo', 'bar']);
 ```
 
-### [.define](index.js#L167)
+### [.define](index.js#L177)
 
 Define a non-enumerable property on the instance.
 
@@ -165,7 +165,7 @@ define('render', function(str, locals) {
 });
 ```
 
-### [.visit](index.js#L183)
+### [.visit](index.js#L193)
 
 Visit `method` over the items in the given object, or map
 visit over the objects in an array.
@@ -176,13 +176,13 @@ visit over the objects in an array.
 * `val` **{Object|Array}**
 * `returns` **{Object}**: Returns the instance for chaining.
 
-### [.extend](index.js#L197)
+### [.extend](index.js#L207)
 
 Static method for inheriting both the prototype and
 static methods of the `Base` class. See [class-utils][]
 for more details.
 
-### [.inherit](index.js#L207)
+### [.inherit](index.js#L217)
 
 Similar to `util.inherit`, but copies all static properties,
 prototype properties, and descriptors from `Provider` to `Receiver`.
