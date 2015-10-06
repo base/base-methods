@@ -11,7 +11,6 @@
   "license": "MIT",
   "files": [
     "index.js",
-    "utils-browser.js",
     "utils.js"
   ],
   "main": "index.js",
@@ -55,6 +54,8 @@
   "verb": {
     "related": {
       "list": [
+        "base-data",
+        "base-options",
         "define-property",
         "set-value",
         "get-value",
