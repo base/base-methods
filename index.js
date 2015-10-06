@@ -149,6 +149,16 @@ function base(name) {
     },
 
     /**
+     * Convenience method for assigning a `name` on the instance
+     * for doing lookups in plugins.
+     */
+
+    is: function(name) {
+      this.define(name, true);
+      return this;
+    },
+
+    /**
      * Define a non-enumerable property on the instance.
      *
      * ```js
