@@ -264,9 +264,7 @@ describe('namespaces', function() {
         });
         assert(base.get('a') === 'b');
       });
-    });
 
-    describe('get', function() {
       it('should visit an object with the given method:', function() {
         base.visit('set', {
           a: 'b',
@@ -309,6 +307,15 @@ describe('namespaces', function() {
         assert(typeof base.cache.b === 'undefined');
       });
     });
+  });
+});
+
+describe('is', function() {
+  it('should set a name prefixed with `is` on the instance:', function() {
+    var base = new Base();
+    base.is('Foo');
+    assert(base.isFoo);
+    assert(base.isFoo === true);
   });
 });
 

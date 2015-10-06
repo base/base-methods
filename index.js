@@ -154,7 +154,7 @@ function base(name) {
      */
 
     is: function(name) {
-      this.define(name, true);
+      this.define('is' + name, true);
       return this;
     },
 
