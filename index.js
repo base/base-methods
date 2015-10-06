@@ -33,6 +33,28 @@ function base(name) {
     constructor: Base,
 
     /**
+     * Define a plugin function to be called immediately upon init.
+     * Plugins are chainable and the only parameter exposed to the
+     * plugin is the application instance.
+     *
+     * ```js
+     * var app = new Base()
+     *   .use(foo)
+     *   .use(bar)
+     *   .use(baz)
+     * ```
+     * @name .use
+     * @param {Function} `fn` plugin function to call
+     * @return {Object} Returns the item instance for chaining.
+     * @api public
+     */
+
+    use: function(fn) {
+      fn.call(this, this);
+      return this;
+    },
+
+    /**
      * Assign `value` to `key`. Also emits `set` with
      * the key and value.
      *

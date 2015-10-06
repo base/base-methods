@@ -52,6 +52,14 @@ describe('static methods', function() {
     Ctor.extend(foo);
     assert(typeof foo.extend === 'function');
   });
+
+  describe('extend', function() {
+    it('should set the extend method on the given object:', function() {
+      function Ctor() {}
+      Base.extend(Ctor);
+      assert(typeof Ctor.extend === 'function');
+    });
+  });
 });
 
 describe('extend prototype methods', function() {
@@ -104,23 +112,39 @@ describe('extend prototype methods', function() {
   });
 });
 
-describe('static methods', function() {
-  beforeEach(function() {
-    base = new Base();
-  });
-
-  describe('extend', function() {
-    it('should set the extend method on the given object:', function() {
-      function Ctor() {}
-      Base.extend(Ctor);
-      assert(typeof Ctor.extend === 'function');
-    });
-  });
-});
-
 describe('prototype methods', function() {
   beforeEach(function() {
     base = new Base();
+  });
+
+  describe('use', function() {
+    it('should expose the use method:', function() {
+      assert(base.use);
+      assert(typeof base.use === 'function');
+    });
+
+    it('should call the function passed to `use`:', function(done) {
+      base.use(function (app) {
+        assert(app);
+        done();
+      });
+    });
+
+    it('should expose the app instance:', function(done) {
+      base.foo = 'bar';
+      base.use(function (app) {
+        assert(app.foo === 'bar');
+        done();
+      });
+    });
+
+    it('should expose the app instance as "this":', function(done) {
+      base.foo = 'bar';
+      base.use(function (app) {
+        assert(this.foo === 'bar');
+        done();
+      });
+    });
   });
 
   describe('set', function() {

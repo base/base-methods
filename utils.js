@@ -4,10 +4,9 @@
  * Lazily required module dependencies
  */
 
-var lazy = require('lazy-cache')(require);
-var fn = require;
+var utils = require('lazy-cache')(require);
+require = utils;
 
-require = lazy;
 require('set-value', 'set');
 require('get-value', 'get');
 require('unset-value', 'del');
@@ -17,7 +16,7 @@ require('component-emitter', 'Emitter');
 require('class-utils', 'cu');
 
 /**
- * Expose `lazy` modules
+ * Expose `utils` modules
  */
 
-module.exports = lazy;
+module.exports = utils;
