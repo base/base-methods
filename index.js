@@ -1,10 +1,10 @@
 'use strict';
 
-function base(name) {
+function namespace(name) {
   var utils = require('./utils');
 
   /**
-   * Create an instance of `Base` with optional `options`.
+   * Create an instance of `Base` with `options`.
    *
    * ```js
    * var app = new Base();
@@ -21,9 +21,9 @@ function base(name) {
     if (!(this instanceof Base)) {
       return new Base(options);
     }
-    utils.Emitter.call(this);
-    if (name) this[name] = {};
+
     this.define('_callbacks', this._callbacks);
+    if (name) this[name] = {};
     if (typeof options === 'object') {
       this.visit('set', options);
     }
@@ -193,6 +193,24 @@ function base(name) {
     visit: function(method, val) {
       utils.visit(this, method, val);
       return this;
+    },
+
+    /**
+     * Mix property `key` onto the Base prototype. If base-methods
+     * is inherited using `Base.extend` this method will be overridden
+     * by a new `mixin` method that will only add properties to the
+     * prototype of the inheriting application.
+     *
+     * @name .mixin
+     * @param {String} `key`
+     * @param {Object|Array} `val`
+     * @return {Object} Returns the instance for chaining.
+     * @api public
+     */
+
+    mixin: function(key, val) {
+      Base.prototype[key] = val;
+      return this;
     }
   });
 
@@ -222,10 +240,10 @@ function base(name) {
  * Expose `base-methods`
  */
 
-module.exports = base();
+module.exports = namespace();
 
 /**
  * Allow users to define a namespace
  */
 
-module.exports.namespace = base;
+module.exports.namespace = namespace;
