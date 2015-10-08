@@ -8,35 +8,39 @@ var base;
 
 describe('constructor', function() {
   it('should return an instance of Base:', function() {
-    var base = new Base();
+    base = new Base();
     assert(base instanceof Base);
   });
 
   it('should return an instance of Base without new:', function() {
-    var base = Base();
+    base = Base();
     assert(base instanceof Base);
   });
 
   it('should extend the instance when an object is passed:', function() {
-    var base = new Base({
+    base = new Base({
       foo: 'bar'
     });
     assert(base.foo === 'bar');
   });
 
-  it('should extend the instance when an array of objects is passed:',
-    function() {
-      var base = new Base([{
-        foo: 'bar'
-      }, {
-        baz: 'qux'
-      }]);
-      assert(base.foo === 'bar');
-      assert(base.baz === 'qux');
-    });
+  it('should extend the instance when an array of objects is passed:', function() {
+    var base = new Base([{
+      foo: 'bar'
+    }, {
+      baz: 'qux'
+    }]);
+    assert(base.foo === 'bar');
+    assert(base.baz === 'qux');
+  });
 });
 
 describe('static methods', function() {
+  beforeEach(function () {
+    var Ctor = require('./');
+    Base = Ctor.namespace();
+  });
+
   it('should expose `.extend` method', function() {
     assert(typeof Base.extend === 'function');
   });
@@ -63,6 +67,11 @@ describe('static methods', function() {
 });
 
 describe('extend prototype methods', function() {
+  beforeEach(function () {
+    var Ctor = require('./');
+    Base = Ctor.namespace();
+  });
+
   it('should extend the prototype of the given Ctor:', function() {
     function Ctor() {
       Base.call(this);
@@ -95,6 +104,10 @@ describe('extend prototype methods', function() {
     assert(typeof Base.prototype.define === 'function');
   });
 
+  it('should expose `prototype.mixin` method', function() {
+    assert(typeof Base.prototype.mixin === 'function');
+  });
+
   it('should add prototype methods to the given Ctor:', function() {
     function Ctor() {
       Base.call(this);
@@ -105,6 +118,7 @@ describe('extend prototype methods', function() {
     assert(typeof Ctor.prototype.del === 'function');
     assert(typeof Ctor.prototype.visit === 'function');
     assert(typeof Ctor.prototype.define === 'function');
+    assert(typeof Ctor.prototype.mixin === 'function');
 
     function foo() {}
     Ctor.extend(foo);
@@ -113,11 +127,17 @@ describe('extend prototype methods', function() {
 });
 
 describe('prototype methods', function() {
-  beforeEach(function() {
+  beforeEach(function () {
+    var Ctor = require('./');
+    Base = Ctor.namespace();
     base = new Base();
   });
 
   describe('use', function() {
+    beforeEach(function() {
+      base = new Base();
+    });
+
     it('should expose the use method:', function() {
       assert(base.use);
       assert(typeof base.use === 'function');
@@ -146,7 +166,6 @@ describe('prototype methods', function() {
       });
     });
   });
-
   describe('set', function() {
     it('should set a key-value pair on the instance:', function() {
       base.set('foo', 'bar');
@@ -154,36 +173,26 @@ describe('prototype methods', function() {
     });
 
     it('should set an object on the instance:', function() {
-      base.set({
-        a: 'b'
-      });
+      base.set({a: 'b'});
       assert(base.a === 'b');
     });
   });
 
   describe('get', function() {
     it('should get a property from the instance:', function() {
-      base.set({
-        a: 'b'
-      });
+      base.set({a: 'b'});
       assert(base.get('a') === 'b');
     });
   });
 
   describe('get', function() {
     it('should visit an object with the given method:', function() {
-      base.visit('set', {
-        a: 'b',
-        c: 'd'
-      });
+      base.visit('set', {a: 'b', c: 'd'});
       assert(base.get('a') === 'b');
       assert(base.get('c') === 'd');
     });
     it('should visit an array with the given method:', function() {
-      base.visit('set', [{
-        a: 'b',
-        c: 'd'
-      }]);
+      base.visit('set', [{a: 'b', c: 'd'}]);
       assert(base.get('a') === 'b');
       assert(base.get('c') === 'd');
     });
@@ -191,9 +200,7 @@ describe('prototype methods', function() {
 
   describe('del', function() {
     it('should remove a property:', function() {
-      base.set({
-        a: 'b'
-      });
+      base.set({a: 'b'});
       assert(base.a === 'b');
       base.del('a');
       assert(typeof base.a === 'undefined');
@@ -215,8 +222,128 @@ describe('prototype methods', function() {
   });
 });
 
+describe('mixin', function() {
+  beforeEach(function () {
+    var Ctor = require('./');
+    Base = Ctor.namespace();
+    base = new Base();
+  });
+
+  it('should add a property to the base prototype:', function() {
+    base.mixin('a', function() {});
+    assert(typeof base.a === 'function');
+    assert(typeof Base.prototype.a === 'function');
+  });
+
+  it('should add to the prototype of an inheriting app:', function() {
+    function Foo() {
+      Base.call(this);
+    }
+    Base.extend(Foo);
+    var foo = new Foo();
+    foo.mixin('a', function() {});
+    assert(typeof Foo.prototype.a === 'function');
+    assert(typeof foo.a === 'function');
+  });
+
+  it('should add to inheriting app prototype:', function() {
+    function Foo() {
+      Base.call(this);
+    }
+    Base.extend(Foo);
+
+    var base = new Base();
+    var foo = new Foo();
+
+    base.mixin('abc', function() {});
+    foo.mixin('xyz', function() {});
+
+    assert(typeof Base.prototype.abc === 'function');
+    assert(typeof Foo.prototype.abc === 'function');
+    assert(typeof base.abc === 'function');
+    assert(typeof foo.abc === 'function');
+
+    assert(typeof Base.prototype.xyz !== 'function');
+    assert(typeof Foo.prototype.xyz === 'function');
+    assert(typeof foo.xyz === 'function');
+    assert(typeof base.xyz !== 'function');
+  });
+
+  it('should not add to Base.prototype from an inheriting app:', function() {
+    function Foo() {
+      Base.call(this);
+    }
+    Base.extend(Foo);
+
+    function Bar() {
+      Base.call(this);
+    }
+    Base.extend(Bar);
+
+    var foo = new Foo();
+    var bar = new Bar();
+    var base = new Base();
+
+    foo.mixin('a', function() {});
+
+    // yes
+    assert(typeof Foo.prototype.a === 'function');
+    assert(typeof foo.a === 'function');
+
+    // no
+    assert(typeof Base.prototype.a !== 'function');
+    assert(typeof base.a !== 'function');
+  });
+
+  it('should NOT mixin from one inheriting prototype to another:', function() {
+    function Foo() {Base.call(this);}
+    Base.extend(Foo);
+
+    function Bar() {Base.call(this);}
+    Base.extend(Bar);
+
+    var foo = new Foo();
+    var bar = new Bar();
+
+    foo.mixin('a', function() {});
+
+    // yes
+    assert(typeof Foo.prototype.a === 'function');
+    assert(typeof foo.a === 'function');
+
+    // no
+    assert(typeof Bar.prototype.a !== 'function');
+    assert(typeof bar.a !== 'function');
+  });
+
+  it('should mixin from Base.prototype to all others:', function() {
+    function Foo() {Base.call(this);}
+    Base.extend(Foo);
+
+    function Bar() {Base.call(this);}
+    Base.extend(Bar);
+
+    var base = new Base();
+    var foo = new Foo();
+    var bar = new Bar();
+
+    base.mixin('xyz', function() {});
+
+    assert(typeof Base.prototype.xyz === 'function');
+    assert(typeof Foo.prototype.xyz === 'function');
+    assert(typeof Bar.prototype.xyz === 'function');
+
+    assert(typeof base.xyz === 'function');
+    assert(typeof foo.xyz === 'function');
+    assert(typeof bar.xyz === 'function');
+  });
+});
 
 describe('namespaces', function() {
+  beforeEach(function () {
+    Base = require('./');
+  });
+
   describe('constructor', function() {
     it('should expose `namespace`', function() {
       assert(typeof Base.namespace === 'function');
@@ -311,8 +438,13 @@ describe('namespaces', function() {
 });
 
 describe('is', function() {
+  beforeEach(function () {
+    var Ctor = require('./');
+    Base = Ctor.namespace();
+    base = new Base();
+  });
+
   it('should set a name prefixed with `is` on the instance:', function() {
-    var base = new Base();
     base.is('Foo');
     assert(base.isFoo);
     assert(base.isFoo === true);
@@ -321,7 +453,6 @@ describe('is', function() {
 
 describe('events', function() {
   it('should emit and listen for events:', function(done) {
-    var base = new Base();
     base.on('foo', function(val) {
       assert(val === 'bar');
       done();
