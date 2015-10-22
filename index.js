@@ -1,6 +1,7 @@
 'use strict';
 
 function namespace(name) {
+  var Emitter = require('component-emitter');
   var utils = require('./utils');
 
   /**
@@ -29,8 +30,18 @@ function namespace(name) {
     }
   }
 
-  Base.prototype = utils.Emitter({
+  Base.prototype = Emitter({
     constructor: Base,
+
+    /**
+     * Convenience method for assigning a `name` on the instance
+     * for doing lookups in plugins.
+     */
+
+    is: function(name) {
+      this.define('is' + name, true);
+      return this;
+    },
 
     /**
      * Define a plugin function to be called immediately upon init.
@@ -74,7 +85,7 @@ function namespace(name) {
      *
      * @name .set
      * @param {String} `key`
-     * @param {*} `value`
+     * @param {any} `value`
      * @return {Object} Returns the instance for chaining.
      * @api public
      */
@@ -83,11 +94,7 @@ function namespace(name) {
       if (typeof key === 'object') {
         this.visit('set', key);
       } else {
-        if (name) {
-          utils.set(this[name], key, val);
-        } else {
-          utils.set(this, key, val);
-        }
+        utils.set(name ? this[name] : this, key, val);
         this.emit('set', key, val);
       }
       return this;
@@ -100,21 +107,48 @@ function namespace(name) {
      * ```js
      * app.set('foo', 'bar');
      * app.get('foo');
-     * // => "bar"
+     * //=> "bar"
      * ```
      *
      * @name .get
-     * @param {*} `key`
-     * @param {Boolean} `escape`
-     * @return {*}
+     * @param {any} `key`
+     * @return {any}
      * @api public
      */
 
     get: function(key) {
-      if (name) {
-        return utils.get(this[name], key);
-      }
-      return utils.get(this, key);
+      var val = name
+        ? utils.get(this[name], key)
+        : utils.get(this, key);
+
+      this.emit('get', key, val);
+      return val;
+    },
+
+    /**
+     * Return true if app has a stored value for `key`,
+     * false only if `typeof` value is `undefined`.
+     *
+     * ```js
+     * app.set('foo', 'bar');
+     * app.has('foo');
+     * //=> true
+     * ```
+     *
+     * @name .has
+     * @param {any} `key`
+     * @return {any}
+     * @api public
+     */
+
+    has: function(key) {
+      var val = name
+        ? utils.get(this[name], key)
+        : utils.get(this, key);
+
+      var has = typeof val !== 'undefined';
+      this.emit('has', key, has);
+      return has;
     },
 
     /**
@@ -138,23 +172,9 @@ function namespace(name) {
       if (Array.isArray(key)) {
         this.visit('del', key);
       } else {
-        if (name) {
-          utils.del(this[name], key);
-        } else {
-          utils.del(this, key);
-        }
+        utils.del(name ? this[name] : this, key);
         this.emit('del', key);
       }
-      return this;
-    },
-
-    /**
-     * Convenience method for assigning a `name` on the instance
-     * for doing lookups in plugins.
-     */
-
-    is: function(name) {
-      this.define('is' + name, true);
       return this;
     },
 
