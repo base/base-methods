@@ -1,7 +1,7 @@
 {
   "name": "base-methods",
   "description": "Starter for creating a node.js application with a handful of common methods, like `set`, `get`, and `del`.",
-  "version": "0.2.14",
+  "version": "0.3.0",
   "homepage": "https://github.com/jonschlinkert/base-methods",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/base-methods",
@@ -21,7 +21,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "class-utils": "^0.2.1",
+    "class-utils": "^0.2.2",
     "collection-visit": "^0.2.1",
     "component-emitter": "^1.2.0",
     "define-property": "^0.2.5",
