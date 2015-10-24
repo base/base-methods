@@ -1,7 +1,7 @@
 {
   "name": "base-methods",
   "description": "Starter for creating a node.js application with a handful of common methods, like `set`, `get`, and `del`.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/jonschlinkert/base-methods",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/base-methods",
@@ -26,7 +26,7 @@
     "component-emitter": "^1.2.0",
     "define-property": "^0.2.5",
     "get-value": "^1.2.1",
-    "lazy-cache": "^0.2.3",
+    "lazy-cache": "^0.2.4",
     "set-value": "^0.2.0",
     "unset-value": "^0.1.0"
   },
@@ -53,14 +53,11 @@
   ],
   "verb": {
     "related": {
+      "description": "If none of the following plugins meet your needs, feel free to use them as examples for creating your own!",
       "list": [
         "base-data",
         "base-options",
-        "define-property",
-        "set-value",
-        "get-value",
-        "unset-value",
-        "class-utils"
+        "base-plugins"
       ]
     }
   }
