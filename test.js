@@ -17,25 +17,30 @@ describe('constructor', function() {
     assert(base instanceof Base);
   });
 
-  it('should extend the instance when an object is passed:', function() {
+  it('should "visit" over an object to extend the instance', function() {
+    base = new Base({foo: 'bar'});
+    assert(base.foo === 'bar');
+    var app = new Base({options: {a: true, b: false}});
+    assert(app.options);
+    assert(app.options.a === true);
+    assert(app.options.b === false);
+  });
+
+  it('should map "visit" over an array to extend the instance', function() {
+    base = new Base([{foo: 'bar'}, {baz: 'qux'}]);
+    assert(base.foo === 'bar');
+    assert(base.baz === 'qux');
+  });
+
+  it('should add ', function() {
     base = new Base({
       foo: 'bar'
     });
     assert(base.foo === 'bar');
   });
-
-  it('should extend the instance when an array of objects is passed:', function() {
-    var base = new Base([{
-      foo: 'bar'
-    }, {
-      baz: 'qux'
-    }]);
-    assert(base.foo === 'bar');
-    assert(base.baz === 'qux');
-  });
 });
 
-describe('static methods', function() {
+describe('static properties', function() {
   beforeEach(function () {
     var Ctor = require('./');
     Base = Ctor.namespace();
@@ -123,6 +128,24 @@ describe('extend prototype methods', function() {
     function foo() {}
     Ctor.extend(foo);
     assert(typeof foo.prototype.set === 'function');
+  });
+});
+
+describe('instance properties', function() {
+  beforeEach(function () {
+    var Ctor = require('./');
+    Base = Ctor.namespace();
+    base = new Base();
+  });
+
+  it('should expose the options property:', function() {
+    assert(base.options);
+    assert(typeof base.options === 'object');
+  });
+
+  it('should expose the cache property:', function() {
+    assert(base.cache);
+    assert(typeof base.cache === 'object');
   });
 });
 

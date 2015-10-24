@@ -18,15 +18,18 @@ function namespace(name) {
    * @api public
    */
 
-  function Base(options) {
+  function Base(config) {
     if (!(this instanceof Base)) {
-      return new Base(options);
+      return new Base(config);
     }
 
     this.define('_callbacks', this._callbacks);
+    this.options = this.options || {};
+    this.cache = this.cache || {};
+
     if (name) this[name] = {};
-    if (typeof options === 'object') {
-      this.visit('set', options);
+    if (typeof config === 'object') {
+      this.visit('set', config);
     }
   }
 
