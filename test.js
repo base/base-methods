@@ -195,6 +195,16 @@ describe('prototype methods', function() {
       assert(base.foo === 'bar');
     });
 
+    it('should set nested property:', function() {
+      base.set('a.b.c', 'd');
+      assert(base.a.b.c === 'd');
+    });
+
+    it('should set a nested property with the key as an array:', function() {
+      base.set(['a', 'b', 'c'], 'd');
+      assert(base.a.b.c === 'd');
+    });
+
     it('should set an object on the instance:', function() {
       base.set({a: 'b'});
       assert(base.a === 'b');
@@ -206,9 +216,61 @@ describe('prototype methods', function() {
       base.set({a: 'b'});
       assert(base.get('a') === 'b');
     });
+
+    it('should get a nested property from the instance:', function() {
+      base.set({a: {b: {c: 'd'}}});
+      assert(base.get('a.b.c') === 'd');
+    });
+
+    it('should get a property using an array:', function() {
+      base.set({a: {b: {c: 'd'}}});
+      assert(base.get(['a', 'b', 'c']) === 'd');
+    });
+
+    it('should get a property using a list of arguments', function() {
+      base.set({a: {b: {c: 'd'}}});
+      assert(base.get('a', 'b', 'c') === 'd');
+      assert(base.get(['a', 'b'], 'c') === 'd');
+      assert(base.get('a', ['b', 'c']) === 'd');
+      assert(base.get('a', 'b.c') === 'd');
+    });
   });
 
-  describe('get', function() {
+  describe('has', function() {
+    it('should work with namespaces:', function() {
+      var Ctor = require('./');
+      Base = Ctor.namespace('cache');
+      var foo = new Base();
+
+      foo.set({a: 'b'});
+      assert(foo.has('a') === true);
+    });
+
+    it('should check for a property from the instance:', function() {
+      base.set({a: 'b'});
+      assert(base.has('a') === true);
+    });
+
+    it('should check for a nested property from the instance:', function() {
+      base.set({a: {b: {c: 'd'}}});
+      assert(base.has('a.b.c') === true);
+    });
+
+    it('should check for a property using an array:', function() {
+      base.set({a: {b: {c: 'd'}}});
+      assert(base.has(['a', 'b', 'c']) === true);
+    });
+
+    it('should check for a property using a list of arguments', function() {
+      base.set({a: {b: {c: 'd'}}});
+      assert(base.has('a', 'b', 'c') === true);
+      assert(base.has(['a', 'b'], 'c') === true);
+      assert(base.has('a', ['b', 'c']) === true);
+      assert(base.has('a', 'b.c') === true);
+    });
+  });
+
+  describe('visit', function() {
     it('should visit an object with the given method:', function() {
       base.visit('set', {a: 'b', c: 'd'});
       assert(base.get('a') === 'b');
