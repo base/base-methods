@@ -15,36 +15,43 @@ $ npm i base-methods --save
 ## Usage
 
 ```js
-var Base = require('base-methods');
+var base = require('base-methods');
 ```
 
 **inherit**
 
 ```js
-function Foo() {
-  Base.call(this);
+function App() {
+  base.call(this);
 }
-Base.extend(Foo);
+base.extend(App);
+
+var app = new App();
+app.set('a', 'b');
+app.get('a');
+//=> 'b';
 ```
 
 **instantiate**
 
 ```js
-var base = new Base();
-base.set('foo', 'bar');
-console.log(base.foo);
+var app = base();
+app.set('foo', 'bar');
+console.log(app.foo);
 //=> 'bar'
 ```
 
 **Inherit or instantiate with a namespace**
 
-A `.create()` method is exposed on the exported function to allow you to create a custom namespace for setting/getting on the instance.
+A `.namespace()` method is exposed on the exported function to allow you to create a custom namespace for setting/getting on the instance.
 
 ```js
-var Base = require('base-methods').create('cache');
-var base = new Base();
-base.set('foo', 'bar');
-console.log(base.cache.foo);
+var Base = require('base-methods')
+var base = Base.namespace('cache');
+
+var app = base();
+app.set('foo', 'bar');
+console.log(app.cache.foo);
 //=> 'bar'
 ```
 
@@ -67,7 +74,7 @@ console.log(app.get('foo'));
 //=> 'bar'
 ```
 
-### [.use](index.js#L66)
+### [.use](index.js#L67)
 
 Define a plugin function to be called immediately upon init. Plugins are chainable and the only parameter exposed to the plugin is the application instance.
 
@@ -85,7 +92,7 @@ var app = new Base()
   .use(baz)
 ```
 
-### [.set](index.js#L96)
+### [.set](index.js#L98)
 
 Assign `value` to `key`. Also emits `set` with the key and value.
 
@@ -111,7 +118,7 @@ console.log(app);
 //=> {name: 'Halle', foo: 'bar', baz: 'quux'}
 ```
 
-### [.get](index.js#L122)
+### [.get](index.js#L130)
 
 Return the stored value of `key`. Dot notation may be used to get [nested property values][get-value].
 
@@ -123,12 +130,15 @@ Return the stored value of `key`. Dot notation may be used to get [nested proper
 **Example**
 
 ```js
-app.set('foo', 'bar');
-app.get('foo');
-//=> "bar"
+app.set('a.b.c', 'd');
+app.get('a.b');
+//=> {c: 'd'}
+
+app.get(['a', 'b']);
+//=> {c: 'd'}
 ```
 
-### [.has](index.js#L147)
+### [.has](index.js#L156)
 
 Return true if app has a stored value for `key`, false only if `typeof` value is `undefined`.
 
@@ -145,7 +155,7 @@ app.has('foo');
 //=> true
 ```
 
-### [.del](index.js#L174)
+### [.del](index.js#L184)
 
 Delete `key` from the instance. Also emits `del` with the key of the deleted item.
 
@@ -164,7 +174,7 @@ app.del('foo');
 app.del(['foo', 'bar']);
 ```
 
-### [.define](index.js#L200)
+### [.define](index.js#L210)
 
 Define a non-enumerable property on the instance.
 
@@ -183,7 +193,7 @@ define('render', function(str, locals) {
 });
 ```
 
-### [.visit](index.js#L216)
+### [.visit](index.js#L226)
 
 Visit `method` over the items in the given object, or map
 visit over the objects in an array.
@@ -194,7 +204,7 @@ visit over the objects in an array.
 * `val` **{Object|Array}**
 * `returns` **{Object}**: Returns the instance for chaining.
 
-### [.mixin](index.js#L234)
+### [.mixin](index.js#L244)
 
 Mix property `key` onto the Base prototype. If base-methods
 is inherited using `Base.extend` this method will be overridden
@@ -207,13 +217,13 @@ prototype of the inheriting application.
 * `val` **{Object|Array}**
 * `returns` **{Object}**: Returns the instance for chaining.
 
-### [.extend](index.js#L248)
+### [.extend](index.js#L258)
 
 Static method for inheriting both the prototype and
 static methods of the `Base` class. See [class-utils][]
 for more details.
 
-### [.inherit](index.js#L258)
+### [.inherit](index.js#L268)
 
 Similar to `util.inherit`, but copies all static properties,
 prototype properties, and descriptors from `Provider` to `Receiver`.
@@ -221,18 +231,34 @@ prototype properties, and descriptors from `Provider` to `Receiver`.
 
 ## Plugins
 
-If none of the following plugins meet your needs, feel free to use them as examples for creating your own!
+There are a number of different plugins available for extending base-methods. Let us know if you create your own!
 
+* [base-cli](https://www.npmjs.com/package/base-cli): Plugin for base-methods that maps built-in methods to CLI args (also supports methods from a… [more](https://www.npmjs.com/package/base-cli) | [homepage](https://github.com/jonschlinkert/base-cli)
+* [base-config](https://www.npmjs.com/package/base-config): base-methods plugin that adds a `config` method for mapping declarative configuration values to other 'base'… [more](https://www.npmjs.com/package/base-config) | [homepage](https://github.com/jonschlinkert/base-config)
 * [base-data](https://www.npmjs.com/package/base-data): adds a `data` method to base-methods. | [homepage](https://github.com/jonschlinkert/base-data)
+* [base-fs](https://www.npmjs.com/package/base-fs): base-methods plugin that adds vinyl-fs methods to your 'base' application for working with the file… [more](https://www.npmjs.com/package/base-fs) | [homepage](https://github.com/jonschlinkert/base-fs)
 * [base-options](https://www.npmjs.com/package/base-options): Adds a few options methods to base-methods, like `option`, `enable` and `disable`. See the readme… [more](https://www.npmjs.com/package/base-options) | [homepage](https://github.com/jonschlinkert/base-options)
+* [base-pipeline](https://www.npmjs.com/package/base-pipeline): base-methods plugin that adds pipeline and plugin methods for easily and programmatically composing streaming plugin… [more](https://www.npmjs.com/package/base-pipeline) | [homepage](https://github.com/jonschlinkert/base-pipeline)
 * [base-plugins](https://www.npmjs.com/package/base-plugins): Upgrade's plugin support in base-methods to allow plugins to be called any time after init. | [homepage](https://github.com/jonschlinkert/base-plugins)
+* [base-store](https://www.npmjs.com/package/base-store): Plugin for getting and persisting config values with your base-methods application. Adds a 'store' object… [more](https://www.npmjs.com/package/base-store) | [homepage](https://github.com/jonschlinkert/base-store)
 
-## Running tests
+## Tests
+
+### Running tests
 
 Install dev dependencies:
 
 ```sh
 $ npm i -d && npm test
+```
+
+### Coverage
+
+```sh
+Statements : 100% (15/15)
+Branches   : 100% (2/2)
+Functions  : 100% (2/2)
+Lines      : 100% (15/15)
 ```
 
 ## Contributing
@@ -253,7 +279,7 @@ Released under the MIT license.
 
 ***
 
-_This file was generated by [verb-cli](https://github.com/assemble/verb-cli) on October 24, 2015._
+_This file was generated by [verb-cli](https://github.com/assemble/verb-cli) on October 29, 2015._
 
 [class-utils]: https://github.com/jonschlinkert/class-utils
 [collection-visit]: https://github.com/jonschlinkert/collection-visit
@@ -262,4 +288,5 @@ _This file was generated by [verb-cli](https://github.com/assemble/verb-cli) on 
 [get-value]: https://github.com/jonschlinkert/get-value
 [lazy-cache]: https://github.com/jonschlinkert/lazy-cache
 [set-value]: https://github.com/jonschlinkert/set-value
+[to-object-path]: https://github.com/jonschlinkert/to-object-path
 [unset-value]: https://github.com/jonschlinkert/unset-value
