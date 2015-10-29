@@ -43,6 +43,7 @@ function namespace(name) {
 
     is: function(name) {
       this.define('is' + name, true);
+      this.define('_name', name);
       return this;
     },
 
@@ -65,6 +66,7 @@ function namespace(name) {
 
     use: function(fn) {
       fn.call(this, this);
+      this.emit('use');
       return this;
     },
 
@@ -94,6 +96,9 @@ function namespace(name) {
      */
 
     set: function(key, val) {
+      if (Array.isArray(key) && arguments.length === 2) {
+        key = utils.toPath(key);
+      }
       if (typeof key === 'object') {
         this.visit('set', key);
       } else {
@@ -108,9 +113,12 @@ function namespace(name) {
      * to get [nested property values][get-value].
      *
      * ```js
-     * app.set('foo', 'bar');
-     * app.get('foo');
-     * //=> "bar"
+     * app.set('a.b.c', 'd');
+     * app.get('a.b');
+     * //=> {c: 'd'}
+     *
+     * app.get(['a', 'b']);
+     * //=> {c: 'd'}
      * ```
      *
      * @name .get
@@ -120,6 +128,7 @@ function namespace(name) {
      */
 
     get: function(key) {
+      key = utils.toPath(arguments);
       var val = name
         ? utils.get(this[name], key)
         : utils.get(this, key);
@@ -145,6 +154,7 @@ function namespace(name) {
      */
 
     has: function(key) {
+      key = utils.toPath(arguments);
       var val = name
         ? utils.get(this[name], key)
         : utils.get(this, key);

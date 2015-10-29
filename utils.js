@@ -29,6 +29,7 @@ require('get-value', 'get');
 require('unset-value', 'del');
 require('collection-visit', 'visit');
 require('define-property', 'define');
+require('to-object-path', 'toPath');
 require('class-utils', 'cu');
 
 /**
