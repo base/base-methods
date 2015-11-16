@@ -4,8 +4,9 @@ var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var eslint = require('gulp-eslint');
+var formatter = require('eslint-friendly-formatter');
 
-var lint = ['index.js', 'test.js'];
+var lint = ['index.js', 'utils.js'];
 
 gulp.task('coverage', function () {
   return gulp.src(lint)
@@ -20,8 +21,9 @@ gulp.task('mocha', ['coverage'], function () {
 });
 
 gulp.task('eslint', function () {
-  return gulp.src(lint)
+  return gulp.src(lint.concat(['test.js']))
     .pipe(eslint())
+    .pipe(eslint.format(formatter));
 });
 
 gulp.task('default', ['mocha', 'eslint']);
