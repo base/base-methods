@@ -3,6 +3,14 @@
 function namespace(name) {
   var Emitter = require('component-emitter');
   var utils = require('./utils');
+  var fns = [];
+
+  function useAll(app) {
+    var len = fns.length, i = 0;
+    while (len--) {
+      app.use(fns[i++]);
+    }
+  }
 
   /**
    * Create an instance of `Base` with `options`.
@@ -31,6 +39,7 @@ function namespace(name) {
     if (typeof config === 'object') {
       this.visit('set', config);
     }
+    useAll(this);
   }
 
   Base.prototype = Emitter({
@@ -246,6 +255,27 @@ function namespace(name) {
       return this;
     }
   });
+
+  /**
+   * Static method for adding global plugin functions that will
+   * be added to an instance when created.
+   *
+   * ```js
+   * Base.use(function(app) {
+   *   app.foo = 'bar';
+   * });
+   * var app = new Base();
+   * console.log(app.foo);
+   * //=> 'bar'
+   * ```
+   *
+   * @param  {Function} `fn` Plugin function to use on each instance.
+   * @api public
+   */
+
+  Base.use = function(fn) {
+    fns.push(fn);
+  };
 
   /**
    * Static method for inheriting both the prototype and
