@@ -32,7 +32,7 @@ describe('constructor', function() {
     assert(base.baz === 'qux');
   });
 
-  it('should add ', function() {
+  it('should add foo', function() {
     base = new Base({
       foo: 'bar'
     });
@@ -41,9 +41,8 @@ describe('constructor', function() {
 });
 
 describe('static properties', function() {
-  beforeEach(function () {
-    var Ctor = require('./');
-    Base = Ctor.namespace();
+  it('should expose `.use` method', function() {
+    assert(typeof Base.use === 'function');
   });
 
   it('should expose `.extend` method', function() {
@@ -69,10 +68,65 @@ describe('static properties', function() {
       assert(typeof Ctor.extend === 'function');
     });
   });
+
+  describe('use', function() {
+    it('should set the use method on the given object:', function() {
+      function Ctor() {}
+      Base.extend(Ctor);
+      assert(typeof Ctor.use === 'function');
+    });
+
+    it('should use a globally loaded plugin through the static use method:', function() {
+      function Ctor() {
+        Base.call(this);
+      }
+      Base.extend(Ctor);
+      Ctor.use(function(app) {
+        app.foo = 'bar';
+      });
+      var inst = new Ctor();
+      assert(inst.foo === 'bar');
+    });
+
+    it('should use a globally loaded plugin through the static use method with namespace:', function() {
+      var Foo = Base.namespace('foo');
+      Foo.use(function(app) {
+        app.set('bar', 'baz');
+      });
+      var inst = new Foo();
+      assert(inst.get('bar') === 'baz');
+      assert(inst.foo.bar === 'baz');
+    });
+
+    it('should use different globally installed plugins when using different namespaces:', function() {
+      var Foo = Base.namespace('foo');
+      var Bar = Base.namespace('bar');
+
+      Foo.use(function(app) {
+        app.set('bar', 'baz');
+      });
+      Bar.use(function(app) {
+        app.set('beep', 'boop');
+      });
+
+      var foo = new Foo();
+      var bar = new Bar();
+
+      assert(foo.get('bar') === 'baz');
+      assert(foo.foo.bar === 'baz');
+      assert(typeof foo.get('beep') === 'undefined');
+      assert(typeof foo.foo.beep === 'undefined');
+
+      assert(bar.get('beep') === 'boop');
+      assert(bar.bar.beep === 'boop');
+      assert(typeof bar.get('bar') === 'undefined');
+      assert(typeof bar.bar.bar === 'undefined');
+    });
+  });
 });
 
 describe('extend prototype methods', function() {
-  beforeEach(function () {
+  beforeEach(function() {
     var Ctor = require('./');
     Base = Ctor.namespace();
   });
@@ -132,7 +186,7 @@ describe('extend prototype methods', function() {
 });
 
 describe('instance properties', function() {
-  beforeEach(function () {
+  beforeEach(function() {
     var Ctor = require('./');
     Base = Ctor.namespace();
     base = new Base();
@@ -150,7 +204,7 @@ describe('instance properties', function() {
 });
 
 describe('prototype methods', function() {
-  beforeEach(function () {
+  beforeEach(function() {
     var Ctor = require('./');
     Base = Ctor.namespace();
     base = new Base();
@@ -167,7 +221,7 @@ describe('prototype methods', function() {
     });
 
     it('should call the function passed to `use`:', function(done) {
-      base.use(function (app) {
+      base.use(function(app) {
         assert(app);
         done();
       });
@@ -175,7 +229,7 @@ describe('prototype methods', function() {
 
     it('should expose the app instance:', function(done) {
       base.foo = 'bar';
-      base.use(function (app) {
+      base.use(function(app) {
         assert(app.foo === 'bar');
         done();
       });
@@ -183,7 +237,7 @@ describe('prototype methods', function() {
 
     it('should expose the app instance as "this":', function(done) {
       base.foo = 'bar';
-      base.use(function (app) {
+      base.use(function(app) {
         assert(this.foo === 'bar');
         done();
       });
@@ -308,7 +362,7 @@ describe('prototype methods', function() {
 });
 
 describe('mixin', function() {
-  beforeEach(function () {
+  beforeEach(function() {
     var Ctor = require('./');
     Base = Ctor.namespace();
     base = new Base();
@@ -360,13 +414,7 @@ describe('mixin', function() {
     }
     Base.extend(Foo);
 
-    function Bar() {
-      Base.call(this);
-    }
-    Base.extend(Bar);
-
     var foo = new Foo();
-    var bar = new Bar();
     var base = new Base();
 
     foo.mixin('a', function() {});
@@ -381,10 +429,10 @@ describe('mixin', function() {
   });
 
   it('should NOT mixin from one inheriting prototype to another:', function() {
-    function Foo() {Base.call(this);}
+    function Foo() { Base.call(this); }
     Base.extend(Foo);
 
-    function Bar() {Base.call(this);}
+    function Bar() { Base.call(this); }
     Base.extend(Bar);
 
     var foo = new Foo();
@@ -402,10 +450,10 @@ describe('mixin', function() {
   });
 
   it('should mixin from Base.prototype to all others:', function() {
-    function Foo() {Base.call(this);}
+    function Foo() { Base.call(this); }
     Base.extend(Foo);
 
-    function Bar() {Base.call(this);}
+    function Bar() { Base.call(this); }
     Base.extend(Bar);
 
     var base = new Base();
@@ -425,7 +473,7 @@ describe('mixin', function() {
 });
 
 describe('namespaces', function() {
-  beforeEach(function () {
+  beforeEach(function() {
     Base = require('./');
   });
 
@@ -523,7 +571,7 @@ describe('namespaces', function() {
 });
 
 describe('is', function() {
-  beforeEach(function () {
+  beforeEach(function() {
     var Ctor = require('./');
     Base = Ctor.namespace();
     base = new Base();
@@ -541,7 +589,7 @@ describe('events', function() {
     base.on('foo', function(val) {
       assert(val === 'bar');
       done();
-    })
+    });
     base.emit('foo', 'bar');
   });
 });
