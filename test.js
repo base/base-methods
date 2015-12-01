@@ -123,6 +123,60 @@ describe('static properties', function() {
       assert(typeof bar.bar.bar === 'undefined');
     });
   });
+
+  describe('mixin', function() {
+    it('should set the mixin method on the given object:', function() {
+      function Ctor() {}
+      Base.extend(Ctor);
+      assert(typeof Ctor.mixin === 'function');
+    });
+
+    it('should use a globally loaded mixin through the static mixin method:', function() {
+      function Ctor() {
+        Base.call(this);
+      }
+      Base.extend(Ctor);
+
+      var inst = new Ctor();
+      Ctor.mixin(function(proto) {
+        proto.foo = 'bar';
+      });
+
+      assert(Ctor.prototype.foo === 'bar');
+      assert(inst.foo === 'bar');
+    });
+  });
+
+  describe('mixins', function() {
+    it('should set the mixins method on the given object:', function() {
+      function Ctor() {}
+      Base.extend(Ctor);
+      assert(typeof Ctor.mixins === 'function');
+    });
+
+    it('should use a globally loaded mixin through the static mixins method:', function() {
+
+      function Ctor() {
+        Base.call(this);
+      }
+      Base.extend(Ctor);
+      Ctor.mixin(function() {
+        return function (proto) {
+          proto.bar = 'bar';
+        };
+      });
+
+      function Child() {
+        Ctor.call(this);
+      }
+      Ctor.extend(Child);
+      Ctor.mixins(Child);
+
+      var inst = new Child();
+      assert(Child.prototype.bar === 'bar');
+      assert(inst.bar === 'bar');
+    });
+  });
 });
 
 describe('extend prototype methods', function() {
