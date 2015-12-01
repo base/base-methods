@@ -123,6 +123,66 @@ describe('static properties', function() {
       assert(typeof bar.bar.bar === 'undefined');
     });
   });
+
+  describe('mixin', function() {
+    it('should set the mixin method on the given object:', function() {
+      function Ctor() {}
+      Base.extend(Ctor);
+      assert(typeof Base.mixin === 'function');
+      assert(typeof Ctor.mixin === 'function');
+    });
+
+    it('should use a globally loaded mixin through the static mixin method:', function() {
+      function Ctor() {
+        Base.call(this);
+      }
+      Base.extend(Ctor);
+      Base.mixin(function(proto) {
+        proto.foo = 'bar';
+      });
+
+      var inst = new Ctor();
+      Ctor.mixin(function(proto) {
+        proto.bar = 'baz';
+      });
+
+      assert(Base.prototype.foo === 'bar');
+      assert(Ctor.prototype.bar === 'baz');
+      assert(inst.foo === 'bar');
+      assert(inst.bar === 'baz');
+    });
+  });
+
+  describe('mixins', function() {
+    it('should set the mixins method on the given object:', function() {
+      function Ctor() {}
+      Base.extend(Ctor);
+      assert(typeof Ctor.mixins === 'function');
+    });
+
+    it('should use a globally loaded mixin through the static mixins method:', function() {
+
+      function Ctor() {
+        Base.call(this);
+      }
+      Base.extend(Ctor);
+      Base.mixin(function fn(proto) {
+        proto.bar = 'bar';
+        return fn;
+      });
+
+      function Child() {
+        Ctor.call(this);
+      }
+      Base.extend(Child);
+      Base.mixins(Child);
+      Ctor.mixins(Child);
+
+      var inst = new Child();
+      assert(Child.prototype.bar === 'bar');
+      assert(inst.bar === 'bar');
+    });
+  });
 });
 
 describe('extend prototype methods', function() {

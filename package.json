@@ -21,7 +21,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "class-utils": "^0.2.2",
+    "class-utils": "^0.3.0",
     "collection-visit": "^0.2.1",
     "component-emitter": "^1.2.0",
     "define-property": "^0.2.5",
