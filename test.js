@@ -128,6 +128,7 @@ describe('static properties', function() {
     it('should set the mixin method on the given object:', function() {
       function Ctor() {}
       Base.extend(Ctor);
+      assert(typeof Base.mixin === 'function');
       assert(typeof Ctor.mixin === 'function');
     });
 
@@ -136,14 +137,19 @@ describe('static properties', function() {
         Base.call(this);
       }
       Base.extend(Ctor);
-
-      var inst = new Ctor();
-      Ctor.mixin(function(proto) {
+      Base.mixin(function(proto) {
         proto.foo = 'bar';
       });
 
-      assert(Ctor.prototype.foo === 'bar');
+      var inst = new Ctor();
+      Ctor.mixin(function(proto) {
+        proto.bar = 'baz';
+      });
+
+      assert(Base.prototype.foo === 'bar');
+      assert(Ctor.prototype.bar === 'baz');
       assert(inst.foo === 'bar');
+      assert(inst.bar === 'baz');
     });
   });
 
@@ -160,16 +166,16 @@ describe('static properties', function() {
         Base.call(this);
       }
       Base.extend(Ctor);
-      Ctor.mixin(function() {
-        return function (proto) {
-          proto.bar = 'bar';
-        };
+      Base.mixin(function fn(proto) {
+        proto.bar = 'bar';
+        return fn;
       });
 
       function Child() {
         Ctor.call(this);
       }
-      Ctor.extend(Child);
+      Base.extend(Child);
+      Base.mixins(Child);
       Ctor.mixins(Child);
 
       var inst = new Child();

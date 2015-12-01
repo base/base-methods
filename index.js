@@ -307,7 +307,7 @@ function namespace(name) {
       }
     };
 
-    Ctor.prototype.mixins = Ctor.prototype.mixins || [];
+    Ctor.prototype.mixins = [];
     Ctor.mixin = function(fn) {
       var mixin = fn(Ctor.prototype);
       if (typeof mixin === 'function') {
