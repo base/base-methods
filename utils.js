@@ -54,7 +54,6 @@ utils.run = function(obj, prop, arr) {
   }
 };
 
-
 /**
  * Expose `utils` modules
  */
