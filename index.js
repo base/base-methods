@@ -5,13 +5,6 @@ function namespace(name) {
   var utils = require('./utils');
   var fns = [];
 
-  function useAll(app) {
-    var len = fns.length, i = 0;
-    while (len--) {
-      app.use(fns[i++]);
-    }
-  }
-
   /**
    * Create an instance of `Base` with `options`.
    *
@@ -39,7 +32,7 @@ function namespace(name) {
     if (typeof config === 'object') {
       this.visit('set', config);
     }
-    useAll(this);
+    utils.run(this, 'use', fns);
   }
 
   Base.prototype = Emitter({
@@ -285,7 +278,68 @@ function namespace(name) {
    * @api public
    */
 
-  Base.extend = utils.cu.extend(Base);
+  Base.extend = utils.cu.extend(Base, function(Ctor, Parent) {
+
+    /**
+     * Static method for adding mixins to the prototype.
+     * When a function is returned from the mixin plugin, it will be added to
+     * an array so it can be used on inheriting classes via `Base.mixins(Child)`.
+     *
+     * ```js
+     * Base.mixin(function fn(proto) {
+     *   proto.foo = function(msg) {
+     *     return 'foo ' + msg;
+     *   };
+     *   return fn;
+     * });
+     * ```
+     *
+     * @param  {Function} `fn` Function to call
+     * @api public
+     * @name  Base.mixin
+     */
+
+    Parent.prototype.mixins = Parent.prototype.mixins || [];
+    Parent.mixin = function(fn) {
+      var mixin = fn(Parent.prototype);
+      if (typeof mixin === 'function') {
+        Parent.prototype.mixins.push(mixin);
+      }
+    };
+
+    Ctor.prototype.mixins = Ctor.prototype.mixins || [];
+    Ctor.mixin = function(fn) {
+      var mixin = fn(Ctor.prototype);
+      if (typeof mixin === 'function') {
+        Ctor.prototype.mixins.push(mixin);
+      }
+    };
+
+    Ctor.prototype.mixin = function(key, value) {
+      Ctor.prototype[key] = value;
+    };
+
+    /**
+     * Static method for running currently saved global mixin functions against a child constructor.
+     *
+     * ```js
+     * Base.extend(Child);
+     * Base.mixins(Child);
+     * ```
+     *
+     * @param  {Function} `Child` Constructor function of a child class
+     * @api public
+     * @name  Base.mixins
+     */
+
+    Parent.mixins = function(Child) {
+      utils.run(Child, 'mixin', Parent.prototype.mixins);
+    };
+
+    Ctor.mixins = function(Child) {
+      utils.run(Child, 'mixin', Ctor.prototype.mixins);
+    };
+  });
 
   /**
    * Similar to `util.inherit`, but copies all static properties,
