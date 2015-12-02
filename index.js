@@ -279,34 +279,6 @@ function namespace(name) {
    */
 
   Base.extend = utils.cu.extend(Base, function(Ctor, Parent) {
-
-    /**
-     * Static method for adding mixins to the prototype.
-     * When a function is returned from the mixin plugin, it will be added to
-     * an array so it can be used on inheriting classes via `Base.mixins(Child)`.
-     *
-     * ```js
-     * Base.mixin(function fn(proto) {
-     *   proto.foo = function(msg) {
-     *     return 'foo ' + msg;
-     *   };
-     *   return fn;
-     * });
-     * ```
-     *
-     * @param  {Function} `fn` Function to call
-     * @api public
-     * @name  Base.mixin
-     */
-
-    Parent.prototype.mixins = Parent.prototype.mixins || [];
-    Parent.mixin = function(fn) {
-      var mixin = fn(Parent.prototype);
-      if (typeof mixin === 'function') {
-        Parent.prototype.mixins.push(mixin);
-      }
-    };
-
     Ctor.prototype.mixins = [];
     Ctor.mixin = function(fn) {
       var mixin = fn(Ctor.prototype);
@@ -319,27 +291,54 @@ function namespace(name) {
       Ctor.prototype[key] = value;
     };
 
-    /**
-     * Static method for running currently saved global mixin functions against a child constructor.
-     *
-     * ```js
-     * Base.extend(Child);
-     * Base.mixins(Child);
-     * ```
-     *
-     * @param  {Function} `Child` Constructor function of a child class
-     * @api public
-     * @name  Base.mixins
-     */
-
-    Parent.mixins = function(Child) {
-      utils.run(Child, 'mixin', Parent.prototype.mixins);
-    };
-
     Ctor.mixins = function(Child) {
       utils.run(Child, 'mixin', Ctor.prototype.mixins);
     };
   });
+
+  /**
+   * Static method for adding mixins to the prototype.
+   * When a function is returned from the mixin plugin, it will be added to
+   * an array so it can be used on inheriting classes via `Base.mixins(Child)`.
+   *
+   * ```js
+   * Base.mixin(function fn(proto) {
+   *   proto.foo = function(msg) {
+   *     return 'foo ' + msg;
+   *   };
+   *   return fn;
+   * });
+   * ```
+   *
+   * @param  {Function} `fn` Function to call
+   * @api public
+   * @name  Base.mixin
+   */
+
+  Base.prototype.mixins = Base.prototype.mixins || [];
+  Base.mixin = function(fn) {
+    var mixin = fn(Base.prototype);
+    if (typeof mixin === 'function') {
+      Base.prototype.mixins.push(mixin);
+    }
+  };
+
+  /**
+   * Static method for running currently saved global mixin functions against a child constructor.
+   *
+   * ```js
+   * Base.extend(Child);
+   * Base.mixins(Child);
+   * ```
+   *
+   * @param  {Function} `Child` Constructor function of a child class
+   * @api public
+   * @name  Base.mixins
+   */
+
+  Base.mixins = function(Child) {
+    utils.run(Child, 'mixin', Base.prototype.mixins);
+  };
 
   /**
    * Similar to `util.inherit`, but copies all static properties,
