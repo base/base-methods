@@ -1,9 +1,12 @@
 {
   "name": "base-methods",
-  "description": "Starter for creating a node.js application with a handful of common methods, like `set`, `get`, and `del`.",
+  "description": "base-methods is the foundation for creating modular, unit testable and highly pluggable node.js applications, starting with a handful of common methods, like `set`, `get`, `del` and `use`.",
   "version": "0.6.1",
   "homepage": "https://github.com/jonschlinkert/base-methods",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "contributors": [
+    "Brian Woodward (https://github.com/doowb)"
+  ],
   "repository": "jonschlinkert/base-methods",
   "bugs": {
     "url": "https://github.com/jonschlinkert/base-methods/issues"
@@ -53,25 +56,26 @@
     "visit"
   ],
   "verb": {
+    "plugins": [
+      "gulp-format-md"
+    ],
     "related": {
       "description": "There are a number of different plugins available for extending base-methods. Let us know if you create your own!",
       "list": [
+        "base-argv",
         "base-cli",
+        "base-config",
         "base-data",
         "base-fs",
-        "base-config",
+        "base-list",
         "base-options",
         "base-pipeline",
         "base-plugins",
+        "base-questions",
+        "base-runner",
         "base-store"
       ]
-    }
-  },
-  "contributors": [
-    {
-      "name": "Jon Schlinkert",
-      "email": "github@sellside.com",
-      "url": "https://github.com/jonschlinkert"
-    }
-  ]
+    },
+    "layout": "default"
+  }
 }
