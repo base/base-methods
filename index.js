@@ -281,7 +281,7 @@ function namespace(name) {
   Base.extend = utils.cu.extend(Base, function(Ctor, Parent) {
     Ctor.prototype.mixins = [];
     Ctor.mixin = function(fn) {
-      var mixin = fn(Ctor.prototype);
+      var mixin = fn(Ctor.prototype, Ctor);
       if (typeof mixin === 'function') {
         Ctor.prototype.mixins.push(mixin);
       }
@@ -317,7 +317,7 @@ function namespace(name) {
 
   Base.prototype.mixins = Base.prototype.mixins || [];
   Base.mixin = function(fn) {
-    var mixin = fn(Base.prototype);
+    var mixin = fn(Base.prototype, Base);
     if (typeof mixin === 'function') {
       Base.prototype.mixins.push(mixin);
     }
