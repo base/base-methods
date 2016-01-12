@@ -1,7 +1,8 @@
 {
   "name": "base-methods",
+  "deprecated": "base-methods has been renamed to `base`. All development has ceased on this repository but will be continued on `base`. Visit <https://github.com/node-base/base> for more details.",
   "description": "base-methods is the foundation for creating modular, unit testable and highly pluggable node.js applications, starting with a handful of common methods, like `set`, `get`, `del` and `use`.",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "homepage": "https://github.com/jonschlinkert/base-methods",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "contributors": [
